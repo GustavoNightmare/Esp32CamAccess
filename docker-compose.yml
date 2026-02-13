@@ -1,0 +1,34 @@
+services:
+  access_server:
+    build: ./server
+    container_name: esp32-access-server
+    restart: unless-stopped
+    environment:
+      # Puerto interno del contenedor
+      - PORT=8000
+
+      # Token simple para que SOLO tu ESP32 pueda conectarse al WebSocket
+      - ESP32_TOKEN=1002968612
+
+      # Directorio de la base de datos de rostros (montado como volumen)
+      - DB_PATH=/app/data/db
+
+      # Umbrales (ajusta según tu caso)
+      - DET_CONF_THRESHOLD=0.9 # confianza mínima del detector (YuNet)
+      - COSINE_THRESHOLD=0.45 # similitud mínima para "match" (SFace). Más alto = más estricto
+      - CONFIRM_FRAMES=3 # cuantos frames seguidos necesita para dar acceso
+      - COOLDOWN_S=3.0 # tiempo mínimo entre aperturas (seg)
+      - GRANT_HOLD_S=2.0 # cuanto dura el estado "ENTRA" (seg) en pantalla
+
+      # Frecuencia máxima de reconocimiento (ms). El video puede ir a 20fps, pero el match puede hacerse más lento.
+      - RECOG_INTERVAL_MS=150
+
+      # FPS del MJPEG hacia el navegador (baja si tu OrangePi va justo)
+      - STREAM_FPS=15
+
+      # Calidad JPEG de salida hacia el navegador (0-100). Más alto = más pesado.
+      - STREAM_JPEG_QUALITY=80
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "8000:8000"
