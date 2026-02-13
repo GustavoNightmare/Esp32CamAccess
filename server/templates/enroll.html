@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Enroll • Control de Acceso</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Enroll (agregar un rostro)</h1>
+      <div class="subtitle">Sube una foto clara de frente (una persona por imagen)</div>
+    </div>
+    <nav>
+      <a class="btn" href="/">Volver</a>
+    </nav>
+  </header>
+
+  <main class="grid">
+    <section class="card">
+      <h2>Formulario</h2>
+
+      <form id="enrollForm" class="form" method="post" enctype="multipart/form-data" action="/enroll">
+        <label>
+          Nombre / ID
+          <input name="name" required placeholder="Ej: JuanPerez" />
+        </label>
+
+        <label>
+          Imagen (jpg/png)
+          <input name="image" type="file" accept="image/*" required />
+        </label>
+
+        <button class="btn" type="submit">Guardar</button>
+      </form>
+
+      <pre id="result" class="result"></pre>
+
+      <div class="hint">
+        Recomendación: agrega 3–10 imágenes por persona con diferentes ángulos/luces.
+      </div>
+    </section>
+  </main>
+
+<script>
+const form = document.getElementById('enrollForm');
+const result = document.getElementById('result');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  result.textContent = 'Subiendo...';
+
+  const fd = new FormData(form);
+  const r = await fetch('/enroll', { method: 'POST', body: fd });
+  const j = await r.json().catch(() => ({}));
+
+  result.textContent = JSON.stringify(j, null, 2);
+});
+</script>
+</body>
+</html>

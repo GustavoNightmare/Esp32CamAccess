@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ESP32-CAM • Control de Acceso</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Control de Acceso (ESP32‑CAM → Flask)</h1>
+      <div class="subtitle">Stream MJPEG + detección/identificación + “ENTRA / NO ENTRA”</div>
+    </div>
+    <nav>
+      <a class="btn" href="/enroll">Enroll (agregar rostro)</a>
+    </nav>
+  </header>
+
+  <main class="grid">
+    <section class="card">
+      <h2>Video</h2>
+      <div class="video-wrap">
+        <img id="stream" src="/mjpeg" alt="mjpeg" />
+      </div>
+      <div class="hint">
+        Si no ves nada: revisa que el ESP32 esté conectado y mandando frames al WS.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Estado</h2>
+      <div class="status">
+        <div class="row"><div class="k">Rostro</div><div id="found" class="v">—</div></div>
+        <div class="row"><div class="k">Nombre</div><div id="name" class="v">—</div></div>
+        <div class="row"><div class="k">Cosine</div><div id="cosine" class="v">—</div></div>
+        <div class="row"><div class="k">Conf detector</div><div id="detconf" class="v">—</div></div>
+        <div class="row"><div class="k">Acceso</div><div id="allowed" class="v badge">—</div></div>
+        <div class="row"><div class="k">Event ID</div><div id="event" class="v">—</div></div>
+        <div class="row"><div class="k">Última act.</div><div id="ts" class="v">—</div></div>
+      </div>
+
+      <h3>Base de datos</h3>
+      <div class="db">
+        <button id="reloadDb" class="btn">Recargar DB</button>
+        <div id="people" class="people"></div>
+      </div>
+
+      <div class="hint">
+        Tip: Para reducir falsos positivos, sube <code>COSINE_THRESHOLD</code> en docker-compose.
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
